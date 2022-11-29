@@ -1,0 +1,67 @@
+.pinkku {
+    /* background-color: #fdc1d9; */
+    background-color: #00dd00;
+}
+
+.select2-selection__rendered {
+    line-height: 31px !important;
+}
+.select2-container .select2-selection--single {
+    height: 35px !important;
+}
+.select2-selection__arrow {
+    height: 34px !important;
+}
+
+.pinkku2 {
+    /* background-color: #ffdcea; */
+    /* background-color: #e7e7e7; */
+    background: linear-gradient(180deg, rgb(235, 255, 233), rgb(235, 255, 233), rgb(235, 255, 233), rgb(139, 230, 131));
+}
+
+.footerku {
+    background-color: rgb(227, 255, 225);
+}
+
+.pink-gelapku {
+    /* background-color: #fa8cb8; */
+    background-color: #21c500;
+}
+
+.hoverku a:hover {
+    transition: 0.5s;
+    color: #277500 !important;
+    background-color: #ffffff;
+    border-left: 10px solid #21c500;
+    font-weight: bold;
+}
+
+.content-wrapper {
+    background-color: rgb(242, 255, 241);
+}
+
+.nav-link {
+    color: #277500 !important;
+}
+
+.activeku {
+    color: #1b5000 !important;
+    padding-top: 10px !important;
+    background-color: #ffffff;
+    border-left: 10px solid #83eb6e;
+    font-weight: bold;
+}
+
+.selectku {
+    height: 50px;
+    padding-bottom: 10px;
+}
+
+.textku {
+    font-size: 20px !important;
+    font-weight: bold !important;
+}
+
+.myback {
+    background: linear-gradient(45deg, rgb(65, 180, 71), rgb(97, 199, 102), rgb(78, 180, 83));
+}
