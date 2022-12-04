@@ -116,6 +116,10 @@
                                         <i class="fa fa-key"></i> Reset
                                     </button>
                                 </form>
+
+                                <a href="{{ route('admin.cetak', [$item->idadmin]) }}" class="badge badge-secondary badge-btn border-0" target="_blank">
+                                    <i class="fa fa-print"></i> Cetak
+                                </a>
                             </td>
                             
                         </tr>

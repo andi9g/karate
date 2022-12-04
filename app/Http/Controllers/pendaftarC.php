@@ -147,9 +147,9 @@ class pendaftarC extends Controller
             'namakelas' => $namakelas,
             'sah' => $sah,
             'idkelas' => $idkelas,
-        ]);
+        ])->setPaper('a4');
 
-        return $pdf->stream();
+        return $pdf->stream('peserta_tanding.pdf');
     }
 
     /**
@@ -233,13 +233,18 @@ class pendaftarC extends Controller
             ->where('idkelas', $idkelas)
             ->count();
 
+            $index = tandingM::where('idbagian', $idbagian)
+            ->where('idlomba', $idlomba)
+            ->where('idkelas', $idkelas)
+            ->count() + 1;
+
             if ($tanding == 0) {
                 $tambah = new tandingM;
                 $tambah->idkelas = $idkelas;
                 $tambah->idbagian = $idbagian;
                 $tambah->idregu = $idregu;
                 $tambah->idlomba = $idlomba;
-                $tambah->index = 1;
+                $tambah->index = $index;
                 $tambah->waktu = false;
                 $tambah->ket = 'primary';
                 $tambah->save();

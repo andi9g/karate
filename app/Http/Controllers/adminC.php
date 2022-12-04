@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\adminM;
+use Illuminate\Support\Collection;
 use App\Models\juriM;
 use App\Models\lapanganM;
 use App\Models\pengaturanM;
 use Illuminate\Http\Request;
 use Str;
+use PDF;
 use Hash;
 class adminC extends Controller
 {
@@ -48,6 +50,31 @@ class adminC extends Controller
         //
     }
 
+    public function cetak(Request $request, $idadmin)
+    {
+        $data1 = adminM::join('lapangan', 'lapangan.idlapangan', 'admin.idlapangan')
+        ->where('admin.idadmin', $idadmin)
+        ->select('admin.*', 'lapangan.namalapangan')
+        ->get();
+        $admin = [];
+        foreach ($data1 as $item) {
+            $data2 = juriM::where('idadmin', $item->idadmin)->get();
+
+            $admin[] = collect([
+                'username' => $item->username,
+                'password' => $item->password2,
+                'namalapangan' => $item->namalapangan,
+                'juri' => $data2,
+            ]);
+        }
+
+        $pdf = PDF::loadView('cetak.admin',[
+            'admin' => $admin,
+        ])->setPaper('a4');
+
+        return $pdf->stream('LoginAdmin.pdf');
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -62,7 +89,7 @@ class adminC extends Controller
         ]);
         
         
-        // try{
+        try{
             $jumlahjuri = pengaturanM::first()->jumlahjuri;
             $username = $request->username;
             $lapangan = $request->lapangan;
@@ -112,9 +139,9 @@ class adminC extends Controller
                 }
             }
             return redirect()->back()->with('toast_error', 'Terjadi kesalahan');
-        // }catch(\Throwable $th){
-        //     return redirect()->back()->with('toast_error', 'Terjadi kesalahan');
-        // }
+        }catch(\Throwable $th){
+            return redirect()->back()->with('toast_error', 'Terjadi kesalahan');
+        }
     }
 
     public function reset(Request $request, $idadmin)

@@ -56,6 +56,10 @@ class Kernel extends HttpKernel
      */
     protected $routeMiddleware = [
         'auth' => \App\Http\Middleware\Authenticate::class,
+        'GerbangLogin' => \App\Http\Middleware\GerbangLogin::class,
+        'GerbangSuperadmin' => \App\Http\Middleware\GerbangSuperadmin::class,
+        'GerbangAdmin' => \App\Http\Middleware\GerbangAdmin::class,
+        'GerbangJuri' => \App\Http\Middleware\GerbangJuri::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,

@@ -19,7 +19,11 @@
 @section('content')
 <div class="container">
     <div class="row">
-        <div class="col-md-7"></div>
+        <div class="col-md-7">
+            <a href="{{ route('cetak.regu.satuan', ['none','none']) }}" class="btn btn-secondary" target="_blank">
+                <i class="fa fa-print"></i> Cetak keseluruhan
+            </a>
+        </div>
         <div class="col-md-5">
             <form action="{{ url()->current() }}" method="get">
                 <div class="input-group mb-3">
@@ -55,7 +59,12 @@
                     @endphp
                     <div class="card">
                         <div class="card-header p-2 {{$arr[$j]}}">
-                          <h6 class="m-0 p-0 text-bold text-capitalize">{{$k->namakelas}}</h6>
+                          <h6 class="m-0 p-0 text-bold text-capitalize float-left">{{$k->namakelas}}</h6>
+                          <h6 class="float-right m-0 p-0">
+                            <a href="{{ route('cetak.regu.satuan', [$l->idlomba, $k->idkelas]) }}" class="badge badge-btn badge-warning border-0" target="_blank">
+                                <i class="fa fa-print"></i>
+                            </a>
+                          </h6>
                         </div>
                         @php
                             $j++;
@@ -83,7 +92,7 @@
                               <a href="{{ route('peserta.regu', [$l->idlomba, $k->idkelas, $b->idbagian]) }}" class="nav-link text-uppercase text-bold bg-light" style="color: rgb(53, 53, 53) !important">
                                 {{$b->namabagian}} 
                                 @if ($jumlah != 0)
-                                    <span class="float-right badge bg-info">{{$jumlah}}</span>asd
+                                    <span class="float-right badge bg-info">{{$jumlah}}</span>
                                 @endif
                               </a>
                             </li>

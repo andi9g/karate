@@ -24,10 +24,7 @@ class UserSeeder extends Seeder
         DB::table('peserta')->truncate();
         DB::table('pertandingan')->truncate();
 
-        for ($i=40 ; $i <= 200 ; $i++ ) { 
-            
-            
-            
+        for ($i=40 ; $i <= 150 ; $i++ ) { 
             
             DB::table('registrasi')->insert([
                 'idregistrasi' => $i,

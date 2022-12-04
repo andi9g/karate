@@ -11,7 +11,15 @@
 @section('judul')
     <div class="container my-0 py-0">
         <h4 class="my-0 py-0">
-            <i class="fa fa-layer-group"></i> 
+            <i class="fa fa-layer-group"></i> {{$namalomba}} <br>
+            [{{strtoupper($namakelas)}}] - [{{strtoupper($namabagian)}}]
+            <br>
+            {{strtoupper($namaregu)}}
+            <br>
+            <a href="{{ url("tanding/$idlomba/$idbagian/$idkelas/bagian") }}" class="btn btn-danger"> 
+                <i class="fa fa-arrow-alt-circle-left"></i>
+                Kembali
+            </a>
         </h4>
     </div>
 @endsection

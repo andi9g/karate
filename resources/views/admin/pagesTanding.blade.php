@@ -110,9 +110,6 @@
                                     <!-- Button trigger modal -->
                                     <a type="button"  class="nav-link text-uppercase text-bold bg-light" data-toggle="modal" data-target="#pilih{{$l->idlomba.$k->idkelas.$b->idbagian}}" style="color: rgb(73, 73, 73) !important">
                                         {{$b->namabagian}} 
-                                        @if ($jumlah != 0)
-                                            <span class="float-right badge bg-info">{{$jumlah}}</span>
-                                        @endif
                                     </a>
                                     
                                     <!-- Modal -->
@@ -170,9 +167,6 @@
                                     @if ($tanding2 > 0)
                                         <a href="{{ route('pilih.bagian', [$l->idlomba, $b->idbagian, $k->idkelas]) }}" class="nav-link text-uppercase text-bold bg-light" style="color: rgb(73, 73, 73) !important;background: rgba(198, 253, 198, 0.5) !important">
                                             {{$b->namabagian}} 
-                                            @if ($jumlah != 0)
-                                                <span class="float-right badge bg-info">{{$jumlah}}</span>
-                                            @endif
                                         </a>
                                     @endif
 

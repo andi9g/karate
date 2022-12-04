@@ -11,7 +11,10 @@
 @section('judul')
     <div class="container my-0 py-0">
         <h4 class="my-0 py-0">
-            <i class="fa fa-layer-group"></i> {{$namalomba}}
+            <i class="fa fa-layer-group"></i> {{$namalomba}} <br>
+            <a href="{{ url('tanding', []) }}" class="btn btn-danger">
+                <i class="fa fa-arrow-alt-circle-left"></i> Kembali
+            </a>
         </h4>
     </div>
 @endsection
@@ -58,7 +61,7 @@
             
             
             @if ($finish == 1)
-                <a href="#" class="btn btn-success btn-sm mb-2">
+                <a href="{{ url('cetak', [$idlomba,$idbagian,$idkelas]) }}" target="_blank" class="btn btn-success btn-sm mb-2">
                     <i class="fa fa-eye"></i> Review Kejuaraan
                 </a>
             @endif
@@ -87,8 +90,13 @@
                             
                             $idpesertatanding = empty($idpesertatanding->idpesertatanding)?0:$idpesertatanding->idpesertatanding;
 
-                            $indikator = DB::table('penilaian')
-                            ->where('idpesertatanding', $idpesertatanding)
+                            $jumlahPeserta = DB::table('pesertatanding')
+                            ->where('idtanding', $item->idtanding)
+                            ->count();
+                            
+                            $indikator = DB::table('pesertatanding')
+                            ->where('idtanding', $item->idtanding)
+                            ->where('selesai', true)
                             ->count();
                 
                         @endphp
@@ -96,7 +104,7 @@
                         <tr style="border-bottom: 0.5px solid grey">
                             
                             <td class="text-center">
-                                @if ($indikator >= $jumlahjuri)
+                                @if ($indikator >= $jumlahPeserta)
                                     <input type="checkbox" name="idtanding[]" value="{{$item->idtanding}}">
                                 @endif
                             </td>
@@ -106,14 +114,21 @@
                                         $ket2 = empty($item->ket2)?'none':$item->ket2;
                                     @endphp
                                     <li class="nav-item">
+                                        @php
+                                            $jumlahPeserta = DB::table('pesertatanding')
+                                            ->where('idtanding', $item->idtanding)
+                                            ->count();
+                                        @endphp
                                         <a href="{{ route('pilih.regu', [$idlomba,$idbagian, $idkelas, $item->idregu, $item->idtanding]) }}" class="nav-link text-bold bg-light" style="color: rgb(73, 73, 73) !important">
-                                            {{ucwords($item->namaregu)}} {{($item->ket=='primary')?"":$item->ket}}
+                                            {{ucwords($item->namaregu)}} {{($item->ket=='primary')?"":$item->ket}} 
+                                            &emsp;
+                                            <small class="badge badge-info">{{$jumlahPeserta}}</small>
                                         </a>
                                     </li>
                                 </ul>
                             </td>
                             <td class="text-center">
-                                @if ($indikator >= $jumlahjuri)
+                                @if ($indikator >= $jumlahPeserta)
                                     <i class="fa fa-circle text-success" title="telah dinilai"></i>
                                 
                                 @else

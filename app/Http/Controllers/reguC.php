@@ -9,6 +9,8 @@ use App\Models\tandingM;
 use App\Models\reguM;
 use App\Models\kelasM;
 use App\Models\pesertatandingM;
+
+use PDF;
 use Illuminate\Http\Request;
 
 class reguC extends Controller
@@ -30,6 +32,98 @@ class reguC extends Controller
             'keyword' => $keyword,
         ]);
     }
+
+
+    public function cetakSatuan(Request $request, $idlomba, $idkelas)
+    {
+        if($idlomba == "none" || $idkelas == "none") {
+            $lomba = lombaM::get();
+            $kelas = kelasM::get();
+        }else {
+            $lomba = lombaM::where('idlomba', $idlomba)->get();
+            $kelas = kelasM::where('idkelas', $idkelas)->get();
+        }
+
+        $data = [];
+        foreach ($lomba as $l) {
+            $data2 = [];
+            foreach ($kelas as $k) {
+                $bagian = bagianM::get();
+                
+                $data3 = [];
+                
+                foreach ($bagian as $b) {
+                    $regu = tandingM::join('pesertatanding', 'pesertatanding.idtanding', 'tanding.idtanding')
+                    ->join('pertandingan', 'pertandingan.idpertandingan', 'pesertatanding.idpertandingan')
+                    ->join('peserta', 'peserta.idpeserta', 'pertandingan.idpeserta')
+                    ->join('regu', 'regu.idregu', 'tanding.idregu')
+                    ->join('lomba', 'lomba.idlomba', 'tanding.idlomba')
+                    ->where('lomba.ket', true)
+                    ->where('pertandingan.sah', true)
+                    ->where('tanding.idlomba', $l->idlomba)
+                    ->orderBy('tanding.index', 'asc')
+                    ->orderBy('pesertatanding.urutan', 'asc')
+                    ->where('tanding.idkelas', $k->idkelas)
+                    ->where('tanding.idbagian', $b->idbagian)
+                    ->where('regu.namaregu', 'like', "Pool %")
+                    ->groupBy('tanding.idregu')
+                    ->groupBy('regu.namaregu')
+                    ->select('tanding.idregu','regu.namaregu')
+                    ->get();
+
+                    $data4 = [];
+                    foreach ($regu as $r) {
+                        $arr = [];
+                        $tanding = tandingM::join('pesertatanding', 'pesertatanding.idtanding', 'tanding.idtanding')
+                        ->join('pertandingan', 'pertandingan.idpertandingan', 'pesertatanding.idpertandingan')
+                        ->join('peserta', 'peserta.idpeserta', 'pertandingan.idpeserta')
+                        ->join('regu', 'regu.idregu', 'tanding.idregu')
+                        ->join('lomba', 'lomba.idlomba', 'tanding.idlomba')
+                        ->where('lomba.ket', true)
+                        ->where('pertandingan.sah', true)
+                        ->where('tanding.idlomba', $l->idlomba)
+                        ->orderBy('tanding.index', 'asc')
+                        ->orderBy('pesertatanding.urutan', 'asc')
+                        ->where('tanding.idkelas', $k->idkelas)
+                        ->where('tanding.idbagian', $b->idbagian)
+                        ->where('tanding.idregu', $r->idregu)
+                        ->where('regu.namaregu', 'like', "Pool %")
+                        ->select('peserta.namapeserta', 'tanding.*', 'peserta.kontingen','pesertatanding.urutan')
+                        ->get();
+                        
+                        // dd($tanding);
+                        $arr[] = $tanding;
+                        $data4[] = [
+                            'namaregu' => $r->namaregu,
+                            'tanding' => $arr,
+                        ];
+                    }
+                    $data3[] = [
+                        'namabagian' => $b->namabagian,
+                        'regu' => $data4,
+                    ];
+                }
+                $data2[] = [
+                    'namakelas' => $k->namakelas,
+                    'bagian' => $data3,
+                ];
+
+            }
+            $data[] = [
+                'namalomba' => $l->namalomba,
+                'kelas' => $data2,
+            ];
+        }
+
+        // dd($data);
+        $pdf = PDF::loadView('cetak.regu', [
+            'data' => $data,
+        ])->setPaper('a4');
+
+        return $pdf->stream('Urutan_Peserta.pdf');
+
+    }
+
 
     public function peserta(Request $request, $idlomba, $idkelas, $idbagian)
     {
@@ -53,6 +147,7 @@ class reguC extends Controller
         ->where('lomba.ket', true)
         ->where('pertandingan.sah', true)
         ->where('tanding.idlomba', $idlomba)
+        ->orderBy('tanding.index', 'asc')
         ->where('tanding.idkelas', $idkelas)
         ->where('tanding.idbagian', $idbagian)
         ->where(function ($query) use ($keyword) {

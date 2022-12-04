@@ -41,7 +41,7 @@
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                         </div>
-                        <form action="{{ route('cetak.filter', [$idkelas]) }}" method="post" target="_blank">
+                        <form action="{{ route('cetak.filter', [$idkelas]) }}" method="get" target="_blank">
                             @csrf
                             <div class="modal-body">
                                 <div class='form-group'>

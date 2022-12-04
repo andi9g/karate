@@ -9,6 +9,7 @@
 
   <link rel="icon" href="" type="image/x-icon">
   @include('layout.header')
+  @yield('headers')
 </head>
 <body class="sidebar-mini sidebar-closed text-sm">
 
@@ -87,7 +88,7 @@
 
     <form class="form-inline ml-3">
       <div class="input-group input-group-sm">
-        <input class="form-control form-control-navbar text-bold text-center" type="search" placeholder="Search" aria-label="Search" disabled value="{{ strtoupper(Session::get('nama')) }}">
+        <input class="form-control form-control-navbar text-bold text-center" type="search" placeholder="Search" aria-label="Search" disabled value="{{ strtoupper(Session::get('posisi')) }} {{empty(Session::get('urutan'))?'':Session::get('urutan')}}">
         <div class="input-group-append">
           <button class="btn btn-navbar" type="refresh">
             <i class="fas fa-sync"></i>
@@ -123,21 +124,10 @@
       <!-- Sidebar user (optional) -->
       <div class="user-panel mt-3 pb-1 mb-3 d-flex">
         <div class="image">
-
-          @php
-              $id = Session::get('id'); 
-              $peserta = DB::table('peserta')->where('idpeserta', $id);
-              if($peserta->count() == 1 ){
-                $gambar = url("/img/peserta/".$peserta->first()->gambar);
-              }else{
-                $gambar = url('img', 'background.jpg');
-              }
-          @endphp
-          <img src="{{ $gambar }}" class="mt-2 rounded-lg" alt="User Image">
         </div>
         <div class="info mt-1">
           <a href="#" class="d-block">
-             {{strtoupper(Session::get('nama'))}}
+             {{strtoupper(Session::get('posisi'))}}
           </a>
           <span>
             <button type="button" class="badge badge-danger badge-btn border-0" data-toggle="modal" data-target="#ubahpassword">
@@ -160,6 +150,20 @@
               </a>
             </li>
 
+            @if (Session::get('posisi')==="juri")
+            <li class="nav-item hoverku">
+              <hr>
+              <a href="{{ url('nilai', []) }}" class="nav-link @yield('activekunilai')">
+                <i class="nav-icon fa fa-edit"></i>
+                <p>
+                  Penilaian
+                </p>
+              </a>
+            </li>
+                
+            @endif
+
+            @if (Session::get('posisi')==="admin")
             <li class="nav-item hoverku">
               <hr>
               <a href="{{ url('tanding', []) }}" class="nav-link @yield('activekutanding')">
@@ -170,6 +174,19 @@
               </a>
             </li>
 
+            <li class="nav-item hoverku">
+              <a href="{{ url('monitor', []) }}" target="_blank" class="nav-link">
+                <i class="nav-icon fa fa-desktop"></i>
+                <p>
+                  Monitor
+                </p>
+              </a>
+            </li>
+                
+            @endif
+
+
+            @if (Session::get('posisi')==="superadmin")
             <li class="nav-item hoverku">
               <hr>
               <a href="{{ url('regu', []) }}" class="nav-link @yield('activekuRegu')">
@@ -216,6 +233,27 @@
                 </p>
               </a>
             </li>
+
+            <li class="nav-item hoverku">
+              <a href="{{ url('superadmin', []) }}" class="nav-link @yield('activekusuperadmin')">
+                <i class="nav-icon fas fa-user"></i>
+                <p>
+                  Data Superadmin
+                </p>
+              </a>
+            </li>
+
+            <li class="nav-item hoverku">
+              <hr>
+              <a href="{{ url('pengaturan', []) }}" class="nav-link @yield('activekupengaturan')">
+                <i class="nav-icon fas fa-wrench"></i>
+                <p>
+                  Pengaturan
+                </p>
+              </a>
+            </li>
+                
+            @endif
 
             
 
@@ -280,6 +318,7 @@
 <!-- ./wrapper -->
 
 @include('layout.script')
+@yield('footers')
 @yield('script')
 </body>
 </html>
