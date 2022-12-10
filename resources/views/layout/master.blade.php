@@ -243,6 +243,16 @@
               </a>
             </li>
 
+
+            <li class="nav-item hoverku">
+              <a href="{{ url('daftar', []) }}" class="nav-link @yield('activekudaftar')">
+                <i class="nav-icon fas fa-user-plus"></i>
+                <p>
+                  Daftar
+                </p>
+              </a>
+            </li>
+
             <li class="nav-item hoverku">
               <hr>
               <a href="{{ url('pengaturan', []) }}" class="nav-link @yield('activekupengaturan')">
@@ -254,17 +264,6 @@
             </li>
                 
             @endif
-
-            
-
-          
-
-          
-
-          
-          
-          
-          
           
         </ul>
       </nav>

@@ -3,7 +3,9 @@
 use Illuminate\Support\Facades\Route;
 
 
-
+Route::get('/', function(){
+    return redirect('login');
+});
 
 //auth
 Route::get('login', 'authC@index');
@@ -34,6 +36,8 @@ Route::middleware(['GerbangLogin'])->group(function () {
         Route::put('pendaftar/{idpertandingan}/proses', 'pendaftarC@store')->name('pendaftar.update');
         Route::post('pendaftar/{idpertandingan}/kelola/regu', 'pendaftarC@kelolaregu')->name('kelola.regu');
         
+        Route::resource('daftar', 'daftarC');
+
         //regu
         Route::resource('regu', 'reguC');
         Route::get('regu/{idlomba}/{idkelas}/{idbagian}/peserta', 'reguC@peserta')->name('peserta.regu');
