@@ -65,7 +65,15 @@
             @foreach ($c['data'] as $item)
                     <tr>
                         <td width="5px" rowspan="2" style="text-align:center;">{{$item["urutan"]}}</td>
-                        <td rowspan="2" class="text-uppercase text-bold">{{$item["namapeserta"]}}</td>
+                        <td rowspan="2" class="text-uppercase text-bold">
+                            @if ($item['waktu']==true)
+                                {{empty($item["namagroup"])?$item["namapeserta"]:$item["namagroup"]}}
+                                    
+                            @else
+                                {{$item["namapeserta"]}}
+
+                            @endif
+                        </td>
                         <td class="text-center text-bold" style="font-weight:bold">TEC</td>
                         
                         @if ($item['view'] == true)
@@ -129,7 +137,16 @@
             @foreach ($datafinal as $item)
                 <tr>
                     <td align="center">{{($item->urutan==4)?3:$item->urutan}}</td>
-                    <td>{{$item->namapeserta}}</td>
+                    <td>
+                        @if ($item->waktu==true)
+                                {{empty($item->namagroup)?$item->namapeserta:$item->namagroup}}
+                                    
+                            @else
+                                {{$item["namapeserta"]}}
+
+                            @endif
+
+                    </td>
                     <td colspan="{{$jumlahjuri + 3}}">{{$item->kontingen}}</td>
                 </tr>
             @endforeach

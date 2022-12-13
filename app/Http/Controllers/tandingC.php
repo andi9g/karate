@@ -159,7 +159,7 @@ class tandingC extends Controller
         ->where('tanding.ket2', 100)
         ->where('tanding.selesai', true)
         ->orderBy('pesertatanding.urutan', 'asc')
-        ->select('tanding.*', 'peserta.namapeserta','pesertatanding.urutan','pesertatanding.idpesertatanding', 'peserta.kontingen')
+        ->select('tanding.*', 'peserta.namapeserta','pesertatanding.urutan','pesertatanding.idpesertatanding', 'peserta.kontingen', 'pesertatanding.namagroup')
         ->get();
 
         foreach ($tanding as $t) {
@@ -175,7 +175,7 @@ class tandingC extends Controller
             ->where('pertandingan.sah', true)
             ->where('tanding.selesai', true)
             ->orderBy('pesertatanding.urutan', 'asc')
-            ->select('tanding.*', 'peserta.namapeserta','pesertatanding.urutan','pesertatanding.idpesertatanding')
+            ->select('tanding.*', 'peserta.namapeserta','pesertatanding.urutan','pesertatanding.idpesertatanding', 'pesertatanding.namagroup')
             ->get();
     
             foreach ($peserta as $item) {
@@ -311,6 +311,8 @@ class tandingC extends Controller
                     'urutan' => $item->urutan,
                     'idtanding' => $item->idtanding,
                     'idpesertatanding' => $item->idpesertatanding,
+                    'namagroup' => $item->namagroup,
+                    'waktu' => $item->waktu,
                     'view' => $view,
                     'namapeserta' => $item->namapeserta,
                     'tec' => $nilaiNT,
@@ -916,6 +918,8 @@ class tandingC extends Controller
                         $tambah->ket = null;
                         $tambah->ket2 = 100;
                         $tambah->save();
+                    }else {
+                        return redirect()->back()->with('toast_error', 'Telah melakukan finish')->withInput();
                     }
 
                     $id = tandingM::where('idregu', $idregu)
@@ -930,6 +934,7 @@ class tandingC extends Controller
                     $tambah = new pesertatandingM;
                     $tambah->idtanding = $id;
                     $tambah->idpertandingan = $d1['idpertandingan'];
+                    $tambah->namagroup = $d1['namagroup'];
                     $tambah->urutan = $pt;
                     $tambah->save();
                     }
@@ -971,42 +976,43 @@ class tandingC extends Controller
                         
                     if($i1 <=2) {
                         
-                    $cek = tandingM::where('idregu', $idregu)
-                    ->where('idkelas', $d1['idkelas'])
-                    ->where('idlomba', $d1['idlomba'])
-                    ->where('idbagian', $d1['idbagian'])
-                    ->where('ket2', 100)
-                    ->count();
-                    
-                    if($cek == 0) {
-                        $tambah = new tandingM;
-                        $tambah->idadmin = $idadmin;
-                        $tambah->idlapangan = $idlapangan;
-                        $tambah->waktu = $d1['waktu'];
-                        $tambah->idkelas = $d1['idkelas'];
-                        $tambah->idbagian = $d1['idbagian'];
-                        $tambah->idregu = $idregu;
-                        $tambah->idlomba = $d1['idlomba'];
-                        $tambah->index = $j;
-                        $tambah->ket = null;
-                        $tambah->ket2 = 100;
+                        $cek = tandingM::where('idregu', $idregu)
+                        ->where('idkelas', $d1['idkelas'])
+                        ->where('idlomba', $d1['idlomba'])
+                        ->where('idbagian', $d1['idbagian'])
+                        ->where('ket2', 100)
+                        ->count();
+                        
+                        if($cek == 0) {
+                            $tambah = new tandingM;
+                            $tambah->idadmin = $idadmin;
+                            $tambah->idlapangan = $idlapangan;
+                            $tambah->waktu = $d1['waktu'];
+                            $tambah->idkelas = $d1['idkelas'];
+                            $tambah->idbagian = $d1['idbagian'];
+                            $tambah->idregu = $idregu;
+                            $tambah->idlomba = $d1['idlomba'];
+                            $tambah->index = $j;
+                            $tambah->ket = null;
+                            $tambah->ket2 = 100;
+                            $tambah->save();
+                        }
+
+                        $id = tandingM::where('idregu', $idregu)
+                        ->where('idkelas', $d1['idkelas'])
+                        ->where('idlomba', $d1['idlomba'])
+                        ->where('idbagian', $d1['idbagian'])
+                        ->where('ket2', 100)
+                        ->first()->idtanding;
+
+                        $pt = pesertatandingM::where('idtanding', $id)->count() + 1;
+                        
+                        $tambah = new pesertatandingM;
+                        $tambah->idtanding = $id;
+                        $tambah->idpertandingan = $d1['idpertandingan'];
+                        $tambah->namagroup = $d1['namagroup'];
+                        $tambah->urutan = $pt;
                         $tambah->save();
-                    }
-
-                    $id = tandingM::where('idregu', $idregu)
-                    ->where('idkelas', $d1['idkelas'])
-                    ->where('idlomba', $d1['idlomba'])
-                    ->where('idbagian', $d1['idbagian'])
-                    ->where('ket2', 100)
-                    ->first()->idtanding;
-
-                    $pt = pesertatandingM::where('idtanding', $id)->count() + 1;
-                    
-                    $tambah = new pesertatandingM;
-                    $tambah->idtanding = $id;
-                    $tambah->idpertandingan = $d1['idpertandingan'];
-                    $tambah->urutan = $pt;
-                    $tambah->save();
                     }
 
                     $i1++;
@@ -1077,6 +1083,7 @@ class tandingC extends Controller
                     $tambah = new pesertatandingM;
                     $tambah->idtanding = $id;
                     $tambah->idpertandingan = $d1['idpertandingan'];
+                    $tambah->namagroup = $d1['namagroup'];
                     $tambah->urutan = $pt;
                     $tambah->save();
                     }
@@ -1153,6 +1160,7 @@ class tandingC extends Controller
                     $tambah = new pesertatandingM;
                     $tambah->idtanding = $id;
                     $tambah->idpertandingan = $d1['idpertandingan'];
+                    $tambah->namagroup = $d1['namagroup'];
                     $tambah->urutan = $pt;
                     $tambah->save();
                     }
@@ -1201,6 +1209,7 @@ class tandingC extends Controller
                     $tambah = new pesertatandingM;
                     $tambah->idtanding = $id;
                     $tambah->idpertandingan = $d1['idpertandingan'];
+                    $tambah->namagroup = $d1['namagroup'];
                     $tambah->urutan = $pt;
                     $tambah->save();
                     }
@@ -1285,6 +1294,7 @@ class tandingC extends Controller
                 $tambah = new pesertatandingM;
                 $tambah->idtanding = $id;
                 $tambah->idpertandingan = $d1['idpertandingan'];
+                $tambah->namagroup = $d1['namagroup'];
                 $tambah->urutan = $pt;
                 $tambah->save();
                 }
