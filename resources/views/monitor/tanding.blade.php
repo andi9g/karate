@@ -51,7 +51,7 @@
     
     <div class="row">
         <div class="col-4 text-center">
-            <img src="https://daftar.seizasport.com/img/peserta/E946F8ED-E1A6-4664-91CA-C48D8311ED98_16697830326386ddf8be519.jpeg" width="75%" alt="" class="rounded-lg" style="border: 2px solid white">
+            <img src="{{ $item->gambar }}" width="75%" alt="" class="rounded-lg" style="border: 2px solid white">
         </div>
         <div class="col-8">
             <div class="row">
@@ -70,7 +70,13 @@
                                 <tr>
                                     <td width="30%">Name</td>
                                     <td width="10px">:</td>
-                                    <td class="text-bold">{{ucwords($item->namapeserta)}}</td>
+                                    <td class="text-bold">
+                                        @if ($item->waktu == true)
+                                            {{ucwords($item->namagroup)}}
+                                        @else
+                                            {{ucwords($item->namapeserta)}}
+                                        @endif
+                                    </td>
                                 </tr>
 
                                 <tr>

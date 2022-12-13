@@ -42,7 +42,7 @@ class monitorC extends Controller
         ->where('pesertatanding.selesai', false)
         ->orderBy('tanding.index', 'asc')
         ->orderBy('pesertatanding.urutan', 'asc')
-        ->select('tanding.*', 'peserta.namapeserta', 'peserta.gambar', 'pesertatanding.idpesertatanding', 'pesertatanding.urutan', 'kelas.namakelas', 'bagian.namabagian', 'regu.namaregu','peserta.kontingen', 'lapangan.namalapangan', 'pertandingan.idbagian')
+        ->select('tanding.*', 'peserta.namapeserta', 'peserta.gambar', 'pesertatanding.idpesertatanding', 'pesertatanding.urutan', 'kelas.namakelas', 'bagian.namabagian', 'regu.namaregu','peserta.kontingen', 'lapangan.namalapangan', 'pertandingan.idbagian', 'pesertatanding.namagroup')
         ->take(1)->get();
 
         $jumlahData = count($data);

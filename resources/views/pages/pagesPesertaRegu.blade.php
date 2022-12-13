@@ -118,6 +118,7 @@
                         <th>Kontingen</th>
                         <th>Regu</th>
                         <th>Urutan</th>
+                        <th>Name Group</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -150,6 +151,13 @@
                                     @endfor
                                     
                                 </select>
+                            </form>
+                        </td>
+
+                        <td style="width: 120px">
+                            <form action="{{ route('buat.namaregu', [$item->idpesertatanding]) }}" method="POST">
+                                @csrf
+                                <input type="text" name="namaregu" style="border:none; background: transparent;border-bottom:1px solid grey;outline: none" class="text-center" onchange="submit()" id="" value="{{$item->namagroup}}"> 
                             </form>
                         </td>
                         <td>

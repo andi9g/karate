@@ -400,7 +400,7 @@ class tandingC extends Controller
         ->where('tanding.idtanding', $idtanding)
         ->where('pertandingan.sah', true)
         ->orderBy('pesertatanding.urutan', 'asc')
-        ->select('tanding.*', 'peserta.namapeserta','pesertatanding.urutan','pesertatanding.idpesertatanding')
+        ->select('tanding.*', 'peserta.namapeserta','pesertatanding.urutan','pesertatanding.idpesertatanding', 'pesertatanding.namagroup')
         ->get();
 
         
@@ -531,7 +531,7 @@ class tandingC extends Controller
                 $view = true;
             }
             
-            
+
 
             $data[] = new Collection([
                 'urutan' => $item->urutan,
@@ -546,6 +546,8 @@ class tandingC extends Controller
                 'ath_total' => $ath,
                 'ath_total_rumus' => $ath_rumus,
                 'total' => $total,
+                'waktu' => $item->waktu,
+                'namagroup' => $item->namagroup,
             ]);
 
             // $nt = array(
@@ -699,7 +701,7 @@ class tandingC extends Controller
         ->where('tanding.idtanding', $idtanding)
         ->where('pertandingan.sah', true)
         ->orderBy('pesertatanding.urutan', 'asc')
-        ->select('tanding.*', 'peserta.namapeserta','pesertatanding.urutan','pesertatanding.idpesertatanding', 'pertandingan.idpertandingan', 'regu.namaregu')
+        ->select('tanding.*', 'peserta.namapeserta','pesertatanding.urutan','pesertatanding.idpesertatanding', 'pertandingan.idpertandingan', 'regu.namaregu', 'pesertatanding.namagroup')
         ->get();
 
         // dd($peserta);
@@ -835,6 +837,7 @@ class tandingC extends Controller
                 'ath' => $nilaiNA,
                 'ath_total' => $ath,
                 'ath_total_rumus' => $ath_rumus,
+                'namagroup' => $item->namagroup,
             ]);
 
         }
@@ -1422,6 +1425,7 @@ class tandingC extends Controller
                         $tambah = new pesertatandingM;
                         $tambah->idtanding = $id;
                         $tambah->idpertandingan = $d1['idpertandingan'];
+                        $tambah->namagroup = $d1['namagroup'];
                         $tambah->urutan = $pt;
                         $tambah->save();
                         }
@@ -1471,6 +1475,7 @@ class tandingC extends Controller
                         $tambah = new pesertatandingM;
                         $tambah->idtanding = $id;
                         $tambah->idpertandingan = $d1['idpertandingan'];
+                        $tambah->namagroup = $d1['namagroup'];
                         $tambah->urutan = $pt;
                         $tambah->save();
                         }
@@ -1558,6 +1563,7 @@ class tandingC extends Controller
                         $tambah = new pesertatandingM;
                         $tambah->idtanding = $id;
                         $tambah->idpertandingan = $d1['idpertandingan'];
+                        $tambah->namagroup = $d1['namagroup'];
                         $tambah->urutan = $pt;
                         $tambah->save();
                         }
@@ -1607,6 +1613,7 @@ class tandingC extends Controller
                         $tambah = new pesertatandingM;
                         $tambah->idtanding = $id;
                         $tambah->idpertandingan = $d1['idpertandingan'];
+                        $tambah->namagroup = $d1['namagroup'];
                         $tambah->urutan = $pt;
                         $tambah->save();
                         }
@@ -1707,11 +1714,13 @@ class tandingC extends Controller
                             $tambah = new pesertatandingM;
                             $tambah->idtanding = $id;
                             $tambah->idpertandingan = $data1[1]['idpertandingan'];
+                            $tambah->namagroup = $data1[1]['namagroup'];
                             $tambah->urutan = $pt;
                             $tambah->save();
                             $tambah = new pesertatandingM;
                             $tambah->idtanding = $id;
                             $tambah->idpertandingan = $data2[1]['idpertandingan'];
+                            $tambah->namagroup = $data2[1]['namagroup'];
                             $tambah->urutan = $pt;
                             $tambah->save();
                             
@@ -1759,22 +1768,26 @@ class tandingC extends Controller
                                 $tambah = new pesertatandingM;
                                 $tambah->idtanding = $id;
                                 $tambah->idpertandingan = $data1[1]['idpertandingan'];
+                                $tambah->namagroup = $data1[1]['namagroup'];
                                 $tambah->urutan = $pt;
                                 $tambah->save();
                                 $tambah = new pesertatandingM;
                                 $tambah->idtanding = $id;
                                 $tambah->idpertandingan = $data2[2]['idpertandingan'];
+                                $tambah->namagroup = $data2[2]['namagroup'];
                                 $tambah->urutan = $pt+1;
                                 $tambah->save();
                             }else if($i==1) {
                                 $tambah = new pesertatandingM;
                                 $tambah->idtanding = $id;
                                 $tambah->idpertandingan = $data1[2]['idpertandingan'];
+                                $tambah->namagroup = $data1[2]['namagroup'];
                                 $tambah->urutan = $pt;
                                 $tambah->save();
                                 $tambah = new pesertatandingM;
                                 $tambah->idtanding = $id;
                                 $tambah->idpertandingan = $data2[1]['idpertandingan'];
+                                $tambah->namagroup = $data2[1]['namagroup'];
                                 $tambah->urutan = $pt+1;
                                 $tambah->save();
                             }
@@ -1878,6 +1891,7 @@ class tandingC extends Controller
                         $tambah = new pesertatandingM;
                         $tambah->idtanding = $id;
                         $tambah->idpertandingan = $d1['idpertandingan'];
+                        $tambah->namagroup = $d1['namagroup'];
                         $tambah->urutan = $pt;
                         $tambah->save();
                         }
@@ -1978,6 +1992,7 @@ class tandingC extends Controller
                         $tambah = new pesertatandingM;
                         $tambah->idtanding = $id;
                         $tambah->idpertandingan = $d1['idpertandingan'];
+                        $tambah->namagroup = $d1['namagroup'];
                         $tambah->urutan = $pt;
                         $tambah->save();
                         }

@@ -49,7 +49,21 @@
                 @foreach ($data as $item)
                 <tr>
                     <td width="5px" rowspan="2" class="text-center">{{$item["urutan"]}}</td>
-                    <td rowspan="2" class="text-uppercase text-bold">{{$item["namapeserta"]}}</td>
+                    <td rowspan="2" class="text-uppercase text-bold">
+                        @if ($item['waktu']==true)
+                            @if (empty($item['namagroup']))
+                            {{$item["namapeserta"]}}
+                            
+                            @else
+                            {{$item["namagroup"]}}
+
+                            @endif
+                            
+                        @else
+                        {{$item["namapeserta"]}}
+
+                        @endif
+                    </td>
                     <td class="text-center text-bold">TEC</td>
                     
                     @if ($item['view'] == true)

@@ -186,6 +186,28 @@ class reguC extends Controller
 
     }
 
+    public function buatnamaregu(Request $request, $idpesertatanding)
+    {
+
+        $request->validate([
+            'namaregu'=>'required'
+        ]);
+        try{
+            $namaregu = $request->namaregu;
+            // dd($namaregu);
+            $update = pesertatandingM::where('idpesertatanding', $idpesertatanding)->update([
+                'namagroup' => $namaregu,
+            ]);
+
+            if($update) {
+                return redirect()->back()->with('toast_success', 'Success')->withInput();
+            }
+
+        }catch(\Throwable $th){
+            return redirect()->back()->with('toast_error', 'Terjadi kesalahan');
+        }
+    }
+
     public function cari(Request $request, $idlomba, $idkelas, $idbagian)
     {
         $idlomba = empty($request->lomba)?$idlomba:$request->lomba;

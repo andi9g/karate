@@ -127,6 +127,7 @@
                         <tr>
                             <th>No</th>
                             <th>Nama Peserta</th>
+                            <th>Kelas</th>
                             <th>Kontingen</th>
                             <th>Kelamin</th>
                             <th>email</th>
@@ -140,6 +141,7 @@
                             <tr>
                                 <td>{{$loop->iteration + $peserta->firstItem() - 1}}</td>
                                 <td>{{$item->namapeserta}}</td>
+                                <td>{{$item->namakelas}}</td>
                                 <td>{{$item->kontingen}}</td>
                                 <td>{{($item->jk=='l')?'Laki-laki':'Perempuan'}}</td>
                                 <td>{{$item->email}}</td>
@@ -154,11 +156,28 @@
                                     @endif
 
                                 </td>
+
+                                <td>
+                                    <form action="{{ route('sah.daftar', [$item->idpertandingan]) }}" method="post">
+                                    @csrf
+                                        <input type="checkbox" name="sah" onclick="submit()" id="" @if ($item->sah==true)
+                                           checked 
+                                        @endif>
+
+                                    </form>
+                                </td>
                             </tr>
                         @endforeach
 
                     </tbody>
                 </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    {{$peserta->links('vendor.pagination.bootstrap-4')}}
+                </div>
             </div>
         </div>
     </div>

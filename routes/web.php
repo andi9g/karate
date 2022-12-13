@@ -37,6 +37,7 @@ Route::middleware(['GerbangLogin'])->group(function () {
         Route::post('pendaftar/{idpertandingan}/kelola/regu', 'pendaftarC@kelolaregu')->name('kelola.regu');
         
         Route::resource('daftar', 'daftarC');
+        Route::post('acc/daftar/{idpertandingan}', 'daftarC@pengesahan')->name('sah.daftar');
 
         //regu
         Route::resource('regu', 'reguC');
@@ -44,6 +45,7 @@ Route::middleware(['GerbangLogin'])->group(function () {
         Route::post('regu/{idlomba}/{idkelas}/{idbagian}/cari', 'reguC@cari')->name('cari.regu');
         Route::get('cetak_regu/satuan/{idlomba}/{idkelas}', 'reguC@cetakSatuan')->name('cetak.regu.satuan');
         //lapangan
+        Route::post('buatnamaregu/{idtanding}', 'reguC@buatnamaregu')->name('buat.namaregu');
         Route::resource('lapangan', 'lapanganC');
         
         //adminS

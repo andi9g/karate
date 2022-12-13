@@ -34,6 +34,7 @@ class daftarC extends Controller
         ->where(function ($query) use ($keyword) {
             $query->where('peserta.namapeserta', 'like', "%$keyword%");
         })
+        ->select('peserta.*', 'pertandingan.*', 'kelas.namakelas')
         ->orderBy('pertandingan.created_at', 'desc')
         ->paginate(20);
         
@@ -74,7 +75,7 @@ class daftarC extends Controller
         ]);
         
         
-        // try{
+        try{
         
 
             if ($request->hasFile('gambar')) {
@@ -158,9 +159,28 @@ class daftarC extends Controller
             }
             
             return redirect()->back()->with('toast_error', 'Kelas Pertandingan Telah Terdaftar');
-        // }catch(\Throwable $th){
-        //     return redirect()->back()->with('toast_error', 'Terjadi kesalahan');
-        // }
+        }catch(\Throwable $th){
+            return redirect()->back()->with('toast_error', 'Terjadi kesalahan');
+        }
+    }
+
+    public function pengesahan(Request $request, $idpertandingan)
+    {
+        $sah = (boolean) $request->sah;
+
+        try{
+            $update = pertandinganM::where('idpertandingan', $idpertandingan)->update([
+                'sah' => $sah,
+            ]);
+
+            if ($update) {
+                return redirect()->back()->with('toast_success', 'success');
+            }
+
+        }catch(\Throwable $th){
+            return redirect()->back()->with('toast_error', 'Terjadi kesalahan');
+        }
+
     }
 
     /**

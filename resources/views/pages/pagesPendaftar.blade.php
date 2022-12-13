@@ -213,6 +213,8 @@
                                     
                                 @endphp --}}
                             </td>
+
+
                             <td>
                                 @if ($item->sah == false)
                                     <form action="{{ route('pendaftar.update', [$item->idpertandingan]) }}" method="post" class="d-inline">

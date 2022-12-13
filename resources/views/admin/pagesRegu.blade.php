@@ -61,7 +61,7 @@
             
             
             @if ($finish == 1)
-                <a href="{{ url('cetak', [$idlomba,$idbagian,$idkelas]) }}" target="_blank" class="btn btn-success btn-sm mb-2">
+                <a href="{{ route('tanding.cetak', [$idlomba,$idbagian,$idkelas]) }}" target="_blank" class="btn btn-success btn-sm mb-2">
                     <i class="fa fa-eye"></i> Review Kejuaraan
                 </a>
             @endif

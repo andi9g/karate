@@ -61,7 +61,7 @@
                                         </h5>
                                     </td>
                                     <td>
-                                        <img src="https://daftar.seizasport.com/img/peserta/E946F8ED-E1A6-4664-91CA-C48D8311ED98_16697830326386ddf8be519.jpeg" width="50px" class="rounded-lg" alt="">
+                                        <img src="{{$item->gambar}}" width="50px" class="rounded-lg" alt="">
                                     </td>
                                     <td class="text-left">
                                         <h5>{{$item->namapeserta}}</h5>
