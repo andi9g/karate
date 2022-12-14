@@ -88,7 +88,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-3 text-center">
-                                    <img src="{{ url('/img', ['gambar.jpg']) }}" width="140px" class="rounded-lg" alt="">
+                                    <img src="{{ $peserta->gambar}}" width="140px" class="rounded-lg" alt="">
                                 </div>
                                 <div class="col-md-9">
                                     <table class="text-lg my-0 py-0" width="100%" border="0">

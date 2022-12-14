@@ -31,10 +31,12 @@ class daftarC extends Controller
         $peserta = pesertaM::join('registrasi', 'registrasi.idregistrasi', 'peserta.idpeserta')
         ->join('pertandingan', 'pertandingan.idpeserta', 'peserta.idpeserta')
         ->join('kelas', 'kelas.idkelas', 'pertandingan.idkelas')
+        ->join('lomba', 'lomba.idlomba', 'pertandingan.idlomba')
+        ->where('lomba.ket', true)
         ->where(function ($query) use ($keyword) {
             $query->where('peserta.namapeserta', 'like', "%$keyword%");
         })
-        ->select('peserta.*', 'pertandingan.*', 'kelas.namakelas')
+        ->select('peserta.*', 'pertandingan.*', 'kelas.namakelas', 'lomba.akses')
         ->orderBy('pertandingan.created_at', 'desc')
         ->paginate(20);
         

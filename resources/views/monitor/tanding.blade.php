@@ -59,7 +59,7 @@
                     <div class="card">
                         <div class="card-footer text-bold" style="border-bottom: 1px solid rgb(192, 192, 192)">
                             <h4 class="my-0 text-bold float-left">
-                                {{$item->namaregu." ".$item->ket2}}
+                                {{$item->namaregu." ".$item->ket}}
                             </h4>
                             <h4 class="my-0 text-bold float-right">
                                 [{{$item->urutan}}]

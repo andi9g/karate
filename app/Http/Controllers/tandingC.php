@@ -125,6 +125,7 @@ class tandingC extends Controller
         
         $jumlahCek = $cek;
 
+        // dd($idlomba." ".$idbagian." ".$idkelas);
         if($cek == 2 || $cek == 0) {
             $tanding = tandingM::join('regu', 'regu.idregu', 'tanding.idregu')
             ->where('tanding.idlomba', $idlomba)
@@ -178,7 +179,9 @@ class tandingC extends Controller
             ->select('tanding.*', 'peserta.namapeserta','pesertatanding.urutan','pesertatanding.idpesertatanding', 'pesertatanding.namagroup')
             ->get();
     
+            
             foreach ($peserta as $item) {
+                
                 $nilaiNA = [];
                 $nilaiNT = [];
                 for ($i=1; $i <= $jumlahjuri; $i++) { 
@@ -339,10 +342,9 @@ class tandingC extends Controller
                 'data' => $data,
             ]);
 
-
+            
         }
-
-        // dd($data);
+        
         // dd($data[0]);//ATH max
             // $arr = array_search($namax[0], $nilaiNA);
             // $nilaiNA[$arr]['ket'] = false;
@@ -918,8 +920,6 @@ class tandingC extends Controller
                         $tambah->ket = null;
                         $tambah->ket2 = 100;
                         $tambah->save();
-                    }else {
-                        return redirect()->back()->with('toast_error', 'Telah melakukan finish')->withInput();
                     }
 
                     $id = tandingM::where('idregu', $idregu)
@@ -1500,6 +1500,314 @@ class tandingC extends Controller
                     return redirect()->back()->with('success', 'Success');
                 }
 
+                if(((int)$cek->ket) == 4) {
+                    
+
+                    $ket1 = tandingM::join('regu', 'regu.idregu', 'tanding.idregu')
+                    ->where('idtanding', $idtanding[0])->select('regu.ket')->first()->ket;
+                    $ket2 = tandingM::join('regu', 'regu.idregu', 'tanding.idregu')
+                    ->where('idtanding', $idtanding[1])->select('regu.ket')->first()->ket;
+                    // dd($ket2);
+                    if($ket1 != $ket2) {
+                        return redirect()->back()->with('warning', 'Terjadi kesalahan');
+                    }
+                    // dd($ket2);
+
+                    $cek = tandingM::where('idregu', $idregu)
+                        ->where('idkelas', $idkelas)
+                        ->where('idlomba', $idlomba)
+                        ->where('idbagian', $idbagian)
+                        ->where('ket2', $ket2)
+                        ->count();
+                    if($cek == 1) {
+                        return redirect()->back()->with('warning', 'Terjadi kesalahan');
+                    }
+                    
+                    $i =1;
+                    foreach ($idtanding as $id) {
+                        $ambil = tandingM::where('idtanding', $id)->first()->idregu;
+                        
+                        ${"data$i"} = $this->urut($idlomba, $idbagian, $idkelas,$ambil, $id);
+                        $i++;
+                    }
+                    //20 itu pool A
+                    //30 itu pool A
+                    rsort($data1);
+                    rsort($data2);
+
+                    // dd($data1);
+
+                    if ($ket2 == "20") {
+                        $ket = "(1,2,3,4) A1 dan A2 => [Pool A]";
+                    }else if($ket2 == "30") {
+                        $ket = "(1,2,3,4) B1 dan B2 => [Pool B]";
+                    }
+
+                    $j = tandingM::where('idkelas', $idkelas)
+                    ->where('idlomba', $idlomba)
+                    ->where('idbagian', $idbagian)
+                    // ->where('ket2', $ket2)
+                    ->count();
+                    $j = $j +1;
+
+                    $i1 = 1;
+                    foreach ($data1 as $d1) {
+                        
+                        if($i1 <=2) {
+                            
+                        $cek = tandingM::where('idregu', $idregu)
+                        ->where('idkelas', $d1['idkelas'])
+                        ->where('idlomba', $d1['idlomba'])
+                        ->where('idbagian', $d1['idbagian'])
+                        ->where('ket2', $ket2)
+                        ->count();
+                        
+                        if($cek == 0) {
+                            $tambah = new tandingM;
+                            $tambah->idadmin = $idadmin;
+                            $tambah->idlapangan = $idlapangan;
+                            $tambah->waktu = $d1['waktu'];
+                            $tambah->idkelas = $d1['idkelas'];
+                            $tambah->idbagian = $d1['idbagian'];
+                            $tambah->idregu = $idregu;
+                            $tambah->idlomba = $d1['idlomba'];
+                            $tambah->index = $j;
+                            $tambah->ket = $ket;
+                            $tambah->ket2 = $ket2;
+                            $tambah->save();
+                        }
+
+                        $id = tandingM::where('idregu', $idregu)
+                        ->where('idkelas', $d1['idkelas'])
+                        ->where('idlomba', $d1['idlomba'])
+                        ->where('idbagian', $d1['idbagian'])
+                        ->where('ket2', $ket2)
+                        ->first()->idtanding;
+
+                        $pt = pesertatandingM::where('idtanding', $id)->count() + 1;
+                        
+                        $tambah = new pesertatandingM;
+                        $tambah->idtanding = $id;
+                        $tambah->idpertandingan = $d1['idpertandingan'];
+                        $tambah->namagroup = $d1['namagroup'];
+                        $tambah->urutan = $pt;
+                        $tambah->save();
+                        }
+
+                        $i1++;
+                        
+
+
+                    }
+
+                    $i1 = 1;
+                    foreach ($data2 as $d1) {
+                        
+                        if($i1 <=2) {
+                            
+                        $cek = tandingM::where('idregu', $idregu)
+                        ->where('idkelas', $d1['idkelas'])
+                        ->where('idlomba', $d1['idlomba'])
+                        ->where('idbagian', $d1['idbagian'])
+                        ->where('ket2', $ket2)
+                        ->count();
+                        
+                        if($cek == 0) {
+                            $tambah = new tandingM;
+                            $tambah->idadmin = $idadmin;
+                            $tambah->idlapangan = $idlapangan;
+                            $tambah->waktu = $d1['waktu'];
+                            $tambah->idkelas = $d1['idkelas'];
+                            $tambah->idbagian = $d1['idbagian'];
+                            $tambah->idregu = $idregu;
+                            $tambah->idlomba = $d1['idlomba'];
+                            $tambah->index = $j;
+                            $tambah->ket = $ket;
+                            $tambah->ket2 = $ket2;
+                            $tambah->save();
+                        }
+
+                        $id = tandingM::where('idregu', $idregu)
+                        ->where('idkelas', $d1['idkelas'])
+                        ->where('idlomba', $d1['idlomba'])
+                        ->where('idbagian', $d1['idbagian'])
+                        ->where('ket2', $ket2)
+                        ->first()->idtanding;
+
+                        $pt = pesertatandingM::where('idtanding', $id)->count() + 1;
+                        
+                        $tambah = new pesertatandingM;
+                        $tambah->idtanding = $id;
+                        $tambah->idpertandingan = $d1['idpertandingan'];
+                        $tambah->namagroup = $d1['namagroup'];
+                        $tambah->urutan = $pt;
+                        $tambah->save();
+                        }
+
+                        $i1++;
+                        
+
+
+                    }
+                    
+                
+                    return redirect()->back()->with('success', 'Success');
+                }
+
+                if(((int)$cek->ket) == 3) {
+                    
+
+                    $ket1 = tandingM::join('regu', 'regu.idregu', 'tanding.idregu')
+                    ->where('idtanding', $idtanding[0])->select('regu.ket')->first()->ket;
+                    $ket2 = tandingM::join('regu', 'regu.idregu', 'tanding.idregu')
+                    ->where('idtanding', $idtanding[1])->select('regu.ket')->first()->ket;
+                    // dd($ket2);
+                    if($ket1 != $ket2) {
+                        return redirect()->back()->with('warning', 'Terjadi kesalahan');
+                    }
+                    // dd($ket2);
+
+                    $cek = tandingM::where('idregu', $idregu)
+                        ->where('idkelas', $idkelas)
+                        ->where('idlomba', $idlomba)
+                        ->where('idbagian', $idbagian)
+                        ->where('ket2', $ket2)
+                        ->count();
+                    if($cek == 1) {
+                        return redirect()->back()->with('warning', 'Terjadi kesalahan');
+                    }
+                    
+                    $i =1;
+                    foreach ($idtanding as $id) {
+                        $ambil = tandingM::where('idtanding', $id)->first()->idregu;
+                        
+                        ${"data$i"} = $this->urut($idlomba, $idbagian, $idkelas,$ambil, $id);
+                        $i++;
+                    }
+                    //20 itu pool A
+                    //30 itu pool A
+                    rsort($data1);
+                    rsort($data2);
+
+                    // dd($data1);
+
+                    if ($ket2 == "20") {
+                        $ket = "(1,2,3,4) A1 dan A2 => [Pool A]";
+                    }else if($ket2 == "30") {
+                        $ket = "(1,2,3,4) B1 dan B2 => [Pool B]";
+                    }
+
+                    $j = tandingM::where('idkelas', $idkelas)
+                    ->where('idlomba', $idlomba)
+                    ->where('idbagian', $idbagian)
+                    // ->where('ket2', $ket2)
+                    ->count();
+                    $j = $j +1;
+
+                    $i1 = 1;
+                    foreach ($data1 as $d1) {
+                        
+                        if($i1 <=3) {
+                            
+                        $cek = tandingM::where('idregu', $idregu)
+                        ->where('idkelas', $d1['idkelas'])
+                        ->where('idlomba', $d1['idlomba'])
+                        ->where('idbagian', $d1['idbagian'])
+                        ->where('ket2', $ket2)
+                        ->count();
+                        
+                        if($cek == 0) {
+                            $tambah = new tandingM;
+                            $tambah->idadmin = $idadmin;
+                            $tambah->idlapangan = $idlapangan;
+                            $tambah->waktu = $d1['waktu'];
+                            $tambah->idkelas = $d1['idkelas'];
+                            $tambah->idbagian = $d1['idbagian'];
+                            $tambah->idregu = $idregu;
+                            $tambah->idlomba = $d1['idlomba'];
+                            $tambah->index = $j;
+                            $tambah->ket = $ket;
+                            $tambah->ket2 = $ket2;
+                            $tambah->save();
+                        }
+
+                        $id = tandingM::where('idregu', $idregu)
+                        ->where('idkelas', $d1['idkelas'])
+                        ->where('idlomba', $d1['idlomba'])
+                        ->where('idbagian', $d1['idbagian'])
+                        ->where('ket2', $ket2)
+                        ->first()->idtanding;
+
+                        $pt = pesertatandingM::where('idtanding', $id)->count() + 1;
+                        
+                        $tambah = new pesertatandingM;
+                        $tambah->idtanding = $id;
+                        $tambah->idpertandingan = $d1['idpertandingan'];
+                        $tambah->namagroup = $d1['namagroup'];
+                        $tambah->urutan = $pt;
+                        $tambah->save();
+                        }
+
+                        $i1++;
+                        
+
+
+                    }
+
+                    $i1 = 1;
+                    foreach ($data2 as $d1) {
+                        
+                        if($i1 <=3) {
+                            
+                        $cek = tandingM::where('idregu', $idregu)
+                        ->where('idkelas', $d1['idkelas'])
+                        ->where('idlomba', $d1['idlomba'])
+                        ->where('idbagian', $d1['idbagian'])
+                        ->where('ket2', $ket2)
+                        ->count();
+                        
+                        if($cek == 0) {
+                            $tambah = new tandingM;
+                            $tambah->idadmin = $idadmin;
+                            $tambah->idlapangan = $idlapangan;
+                            $tambah->waktu = $d1['waktu'];
+                            $tambah->idkelas = $d1['idkelas'];
+                            $tambah->idbagian = $d1['idbagian'];
+                            $tambah->idregu = $idregu;
+                            $tambah->idlomba = $d1['idlomba'];
+                            $tambah->index = $j;
+                            $tambah->ket = $ket;
+                            $tambah->ket2 = $ket2;
+                            $tambah->save();
+                        }
+
+                        $id = tandingM::where('idregu', $idregu)
+                        ->where('idkelas', $d1['idkelas'])
+                        ->where('idlomba', $d1['idlomba'])
+                        ->where('idbagian', $d1['idbagian'])
+                        ->where('ket2', $ket2)
+                        ->first()->idtanding;
+
+                        $pt = pesertatandingM::where('idtanding', $id)->count() + 1;
+                        
+                        $tambah = new pesertatandingM;
+                        $tambah->idtanding = $id;
+                        $tambah->idpertandingan = $d1['idpertandingan'];
+                        $tambah->namagroup = $d1['namagroup'];
+                        $tambah->urutan = $pt;
+                        $tambah->save();
+                        }
+
+                        $i1++;
+                        
+
+
+                    }
+                    
+                
+                    return redirect()->back()->with('success', 'Success');
+                }
+
                 if(((int)$cek->ket) == 1) {
                    
 
@@ -1677,7 +1985,7 @@ class tandingC extends Controller
                     rsort($data1);
                     rsort($data2);
                     
-
+                    
                     $jml = count($data1) + count($data2);
 
                     $j = tandingM::where('idkelas', $idkelas)
@@ -1687,7 +1995,7 @@ class tandingC extends Controller
                     $j = $j +1;
 
                     for ($i=0; $i < 2; $i++) { 
-                        if($jml == 5 && $i == 0){
+                        if($jml <= 5 && $i == 0){
                             $ket = null;
                             $cek = tandingM::where('idregu', $idregu)
                             ->where('idkelas', $data1[0]['idkelas'])

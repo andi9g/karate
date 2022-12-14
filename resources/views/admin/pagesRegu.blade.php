@@ -104,9 +104,9 @@
                         <tr style="border-bottom: 0.5px solid grey">
                             
                             <td class="text-center">
-                                @if ($indikator >= $jumlahPeserta)
+                                {{-- @if ($indikator >= $jumlahPeserta) --}}
                                     <input type="checkbox" name="idtanding[]" value="{{$item->idtanding}}">
-                                @endif
+                                {{-- @endif --}}
                             </td>
                             <td width="70%">
                                 <ul class="nav flex-column">
